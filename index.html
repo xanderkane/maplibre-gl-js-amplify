@@ -125,18 +125,43 @@
         //   })
         // });
 
+        var marker = new maplibregl.Marker();
+        var popup = new maplibregl.Popup({ offset: 35 });
         // load markers version 2
         for(var i=0;i<Markers.Info.length;i++) {
-          var marker = new maplibregl.Marker()
+          marker = new maplibregl.Marker()
               .setLngLat(Markers.Info[i].coordinates)
               .addTo(map);
 
-          var popup = new maplibregl.Popup({ offset: 35 });
+          /*var popup = new maplibregl.Popup({ offset: 35 });
           // set popup position and text & add it to the map
           popup.setLngLat(Markers.Info[i].coordinates)
             .setHTML("<div><div><strong>{Markers.Info[i].title}</strong></div><div>{Markers.Info[i].address}</div></div>")
-            .addTo(map);
-        }        
+            .addTo(map);*/
+        }
+        
+        // Set map event handler
+        map.on('click', async (event) => {
+          const { lngLat } = event;
+
+          try {
+            // Get place details
+            const point = await Geo.searchByCoordinates([lngLat.lng, lngLat.lat]);
+
+            // set popup position and text & add it to the map
+            popup.setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
+              .setText(point.label)
+              .addTo(map);
+
+            // set marker coords & add it to the map
+            marker.setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
+              .addTo(map);
+          } catch (error) {
+            console.log(error);
+          }
+        });       
+        
+        
       }
 
       initializeMap();
