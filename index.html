@@ -71,11 +71,13 @@
       };
       
       const { Amplify } = aws_amplify_core;
+      const { Geo } = aws_amplify_geo;
       const { createMap } = AmplifyMapLibre;
 
       const identityPoolId = "us-east-1:5ac5c6cc-6df2-4120-b587-45ef778f878c";
       const region = "us-east-1";
       const mapName = "demo.map";
+      const placeIndexName = "demo.place";
 
       Amplify.configure({
         Auth: {
@@ -91,6 +93,12 @@
                 },
               },
               default: mapName,
+            },
+            search_indices: {
+              items: [
+                placeIndexName
+              ],
+              default: placeIndexName
             },
             region,
           },
@@ -125,43 +133,18 @@
         //   })
         // });
 
-        var marker = new maplibregl.Marker();
-        var popup = new maplibregl.Popup({ offset: 35 });
         // load markers version 2
         for(var i=0;i<Markers.Info.length;i++) {
-          marker = new maplibregl.Marker()
+          var point = await Geo.searchByCoordinates(Markers.Info[i].coordinates);
+
+          var popup = new maplibregl.Popup({
+            offset: 35 }).setText(point.label);
+
+          var marker = new maplibregl.Marker()
               .setLngLat(Markers.Info[i].coordinates)
+              .setPopup(popup)
               .addTo(map);
-
-          /*var popup = new maplibregl.Popup({ offset: 35 });
-          // set popup position and text & add it to the map
-          popup.setLngLat(Markers.Info[i].coordinates)
-            .setHTML("<div><div><strong>{Markers.Info[i].title}</strong></div><div>{Markers.Info[i].address}</div></div>")
-            .addTo(map);*/
-        }
-        
-        // Set map event handler
-        map.on('click', async (event) => {
-          const { lngLat } = event;
-
-          try {
-            // Get place details
-            const point = await Geo.searchByCoordinates([lngLat.lng, lngLat.lat]);
-
-            // set popup position and text & add it to the map
-            popup.setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
-              .setText(point.label)
-              .addTo(map);
-
-            // set marker coords & add it to the map
-            marker.setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
-              .addTo(map);
-          } catch (error) {
-            console.log(error);
-          }
-        });       
-        
-        
+        }  
       }
 
       initializeMap();
