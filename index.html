@@ -66,19 +66,19 @@
         map.addControl(new maplibregl.NavigationControl(), "top-left");
 
         fetch("./json/AmazonHubLockers.json")
-                .then(function (res){
-                  return res.json();
-                })
-                .then(function (data){
-                  // Just in this place you have access to JSON values
-                  data.forEach(function (marker_values){
-                    //Create Marker
-                    var marker = new maplibregl.Marker()
-                            .setLngLat([marker_values.longitude, marker_values.latitude])
-                            .addTo(map);
-
-                  })
-                });
+          .then(function (res){
+            return res.json();
+          })
+          .then(function (data){
+            // Just in this place you have access to JSON values
+            data.forEach(function (marker_values){
+          
+            //Create Marker
+            var marker = new maplibregl.Marker()
+              .setLngLat([marker_values.longitude, marker_values.latitude])
+              .addTo(map);
+          })
+        });
       }
 
       initializeMap();
