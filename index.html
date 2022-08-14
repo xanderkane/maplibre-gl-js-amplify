@@ -130,6 +130,12 @@
           var marker = new maplibregl.Marker()
               .setLngLat(Markers.Info[i].coordinates)
               .addTo(map);
+
+          var popup = new maplibregl.Popup({ offset: 35 });
+          // set popup position and text & add it to the map
+          popup.setLngLat(Markers.Info[i].coordinates)
+            .setHTML("<div><div><strong>{Markers.Info[i].title}</strong></div><div>{Markers.Info[i].address}</div></div>")
+            .addTo(map);
         }        
       }
 
