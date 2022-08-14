@@ -8,6 +8,7 @@
     <script src="https://cdn.amplify.aws/packages/auth/4.3.8/aws-amplify-auth.min.js" integrity="sha384-jfkXCEfYyVmDXYKlgWNwv54xRaZgk14m7sjeb2jLVBtUXCD2p+WU8YZ2mPZ9Xbdw" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.amplify.aws/packages/geo/1.1.0/aws-amplify-geo.min.js" integrity="sha384-TFMTyWuCbiptXTzvOgzJbV8TPUupG1rA1AVrznAhCSpXTIdGw82bGd8RTk5rr3nP" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.amplify.aws/packages/maplibre-gl-js-amplify/1.1.0/maplibre-gl-js-amplify.umd.min.js" integrity="sha384-7/RxWonKW1nM9zCKiwU9x6bkQTjldosg0D1vZYm0Zj+K/vUSnA3sOMhlRRWAtHPi" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <style>
       body {
         margin: 0;
@@ -17,11 +18,14 @@
         height: 100vh;
       }
     </style>
+
   </head>
 
   <body>
     <div id="map" />
+
     <script type="module">
+
       const { Amplify } = aws_amplify_core;
       const { createMap } = AmplifyMapLibre;
 
@@ -60,9 +64,26 @@
         );
 
         map.addControl(new maplibregl.NavigationControl(), "top-left");
+
+        fetch("./json/AmazonHubLockers.json")
+                .then(function (res){
+                  return res.json();
+                })
+                .then(function (data){
+                  // Just in this place you have access to JSON values
+                  data.forEach(function (marker_values){
+                    //Create Marker
+                    var marker = new maplibregl.Marker()
+                            .setLngLat([marker_values.longitude, marker_values.latitude])
+                            .addTo(map);
+
+                  })
+                });
       }
 
       initializeMap();
+
+
     </script>
   </body>
 </html>
