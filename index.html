@@ -30,43 +30,43 @@
             {
               "coordinates": [-123.13271027785173, 49.29010391706197],
               "title": "Amazon Hub Locker - Robson",
-              "address": "1675 Robson St, Vancouver, BC V6G 1C8, Canada"
+              "address": "Whole Foods Market, 1675 Robson St, Vancouver, BC, V6G 1C8, CAN"
             },
             {
               "coordinates": [-123.13428304815704, 49.280705277227625],
               "title": "Amazon Hub Locker - Bobtail",
-              "address": "1176 Burnaby St, Vancouver, BC V6E 1P1, Canada"
+              "address": "1176 Burnaby St, Vancouver, BC, V6E 1P1, CAN"
             },
             {
               "coordinates": [-123.12419611767818, 49.28169238955873],
               "title": "Amazon Hub Locker - Voltmeter",
-              "address": "900 Burrard St, Vancouver, BC V6Z 3G5, Canada"
+              "address": "Canto Mando, 938 Smithe St, Vancouver, BC, V6Z 3H8, CAN"
             },
             {
               "coordinates": [-123.12858995194533, 49.27838833253954],
               "title": "Amazon Hub Locker - Asif",
-              "address": "904 Davie St, Vancouver, BC V6Z 1B8, Canada"
+              "address": "7-Eleven, 904 Davie St, Vancouver, BC, V6Z 1B8, CAN"
             },
             {
               "coordinates": [-123.13102581887678, 49.27491020868351],
               "title": "Amazon Hub Locker - Mahogany",
-              "address": "1480 Howe St, Vancouver, BC V6Z 1C4, Canada"
+              "address": "1450 Howe St, Vancouver, BC, V6Z 1R8, CAN"
             },
             {
               "coordinates": [-123.09451103698422, 49.27211667582941],
               "title": "Amazon Hub Locker - Workgroup",
-              "address": "369 Terminal Ave, Vancouver, BC V6A 4C4, Canada"
+              "address": "Fitness Science, 379 Terminal Ave, Vancouver, BC, V6A, CAN"
             },
             {
               "coordinates": [-123.11528093202048, 49.2640241637882],
               "title": "Amazon Hub Locker - Cambie",
-              "address": "510 W 8th Ave, Vancouver, BC V5Z 1C5, Canada"
+              "address": "Royal Bank, 505 Broadway W, Vancouver, BC, V5Z 1E7, CAN"
             },
             {
               "coordinates": [-123.0583274910539, 49.28095021967962],
               "title": "Amazon Hub Locker - Estolano",
-              "address": "2280 E Hastings St #101, Vancouver, BC V5L 1V4, Canada"
-            }    
+              "address": "PharmaChoice, 101-2280 Hastings St E, Vancouver, BC, V5L 1V4, CAN"
+            }
         ]
       };
       
@@ -104,6 +104,7 @@
           },
         }
       });
+
 
       async function initializeMap() {
         const map = await createMap(
@@ -162,14 +163,25 @@
             // Get place details
             const point = await Geo.searchByCoordinates([lngLat.lng, lngLat.lat]);
 
-            // set popup position and text & add it to the map
-            var popup = new maplibregl.Popup({ offset: 35 }).setText(point.label);
+            // Verify existing marker
+            var marker_exist = false;
+            for(let i=0;i<Markers.Info.length;i++) {
+              if(Markers.Info[i].address === point.label){
+                marker_exist = true;
+              }
+            }
 
-            // set marker coords & add it to the map
-            var marker = new maplibregl.Marker()
-              .setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
-              .setPopup(popup)
-              .addTo(map);
+
+            if(!marker_exist){
+              // set popup position and text & add it to the map
+              var popup = new maplibregl.Popup({ offset: 35 }).setText(point.label);
+
+              // set marker coords & add it to the map
+              var marker = new maplibregl.Marker()
+                .setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
+                .setPopup(popup)
+                .addTo(map);
+            }
           } catch (error) {
             console.log(error);
           }
