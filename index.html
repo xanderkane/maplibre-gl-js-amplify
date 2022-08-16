@@ -147,45 +147,45 @@
               .addTo(map);
         }
 
-        // Set map event handler
-        map.on('click', async (event) => {
-          const { lngLat } = event;
+        // // Set map event handler
+        // map.on('click', async (event) => {
+        //   const { lngLat } = event;
 
-          // Initialize one marker and one popup
-          var marker = new maplibregl.Marker();
-          var popup = new maplibregl.Popup({ offset: 35 });
+        //   // Initialize one marker and one popup
+        //   var marker = new maplibregl.Marker();
+        //   var popup = new maplibregl.Popup({ offset: 35 });
 
-          // Remove existing marker & popup if any
-          if (marker) marker.remove();
-          if (popup) popup.remove();
+        //   // Remove existing marker & popup if any
+        //   if (marker) marker.remove();
+        //   if (popup) popup.remove();
 
-          try {
-            // Get place details
-            const point = await Geo.searchByCoordinates([lngLat.lng, lngLat.lat]);
+        //   try {
+        //     // Get place details
+        //     const point = await Geo.searchByCoordinates([lngLat.lng, lngLat.lat]);
 
-            // Verify existing marker
-            var marker_exist = false;
-            for(let i=0;i<Markers.Info.length;i++) {
-              if(Markers.Info[i].address === point.label){
-                marker_exist = true;
-              }
-            }
+        //     // Verify existing marker
+        //     var marker_exist = false;
+        //     for(let i=0;i<Markers.Info.length;i++) {
+        //       if(Markers.Info[i].address === point.label){
+        //         marker_exist = true;
+        //       }
+        //     }
 
 
-            if(!marker_exist){
-              // set popup position and text & add it to the map
-              var popup = new maplibregl.Popup({ offset: 35 }).setText(point.label);
+        //     if(!marker_exist){
+        //       // set popup position and text & add it to the map
+        //       var popup = new maplibregl.Popup({ offset: 35 }).setText(point.label);
 
-              // set marker coords & add it to the map
-              var marker = new maplibregl.Marker()
-                .setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
-                .setPopup(popup)
-                .addTo(map);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        });
+        //       // set marker coords & add it to the map
+        //       var marker = new maplibregl.Marker()
+        //         .setLngLat([point.geometry?.point[0], point.geometry?.point[1]])
+        //         .setPopup(popup)
+        //         .addTo(map);
+        //     }
+        //   } catch (error) {
+        //     console.log(error);
+        //   }
+        // });
       }
 
       initializeMap();
